@@ -1,0 +1,106 @@
+{
+    "control_plane": {
+        "login_banner": "You are connect to a multi-az Supervisor",
+        "network": {
+            "backing": {
+                "backing": "NETWORK_SEGMENT",
+                "network_segment": {
+                    "networks": [ "${TKGMgmtNetwork1}","${TKGMgmtNetwork2}","${TKGMgmtNetwork3}" ]
+                }
+            },
+            "ip_management": {
+                "dhcp_enabled": false,
+                "gateway_address": "192.168.100.1/23",
+                "ip_assignments": [ {
+                    "assignee": "NODE",
+                    "ranges": [ {
+                        "address": "192.168.100.60",
+                        "count": 5
+                    } ]
+                } ]
+            },
+            "network": "mgmt",
+            "proxy": {
+                "proxy_settings_source": "VC_INHERITED"
+            },
+            "services": {
+                "dns": {
+                    "search_domains": [ "env1.lab.test" ],
+                    "servers": [ "192.168.100.1" ]
+                },
+                "ntp": {
+                    "servers": [ "time1.vmware.com" ]
+                }
+            }
+        },
+        "size": "SMALL",
+        "storage_policy": "${TKGStoragePolicy}"
+    },
+    "name": "multi-az-supervisor0",
+    "workloads": {
+        "edge": {
+            "load_balancer_address_ranges": [
+                {
+                    "address": "${NSX_INGRESS_CIDR}",
+                    "count": 16
+                }
+            ],
+            "nsx": {
+                "edge_cluster_ID": "${NSX_EDGE_CLUSTER_ID}",
+                "egress_IP_ranges": [
+                    {
+                        "address": "${NSX_EGRESS_CIDR}",
+                        "count": 16
+                    }
+                ],
+                "load_balancer_size": "SMALL",
+                "routing_mode": "NAT",
+                "t0_gateway": "${NSX_T0_GATEWAY}"
+            },
+            "provider": "NSX"
+        },
+        "images": {
+           "kubernetes_content_library": "${TKGContentLibrary}"
+        },
+        "network": {
+            "ip_management": {
+                "dhcp_enabled": false,
+                "gateway_address": "192.168.102.1/23",
+                "ip_assignments": [ {
+                    "assignee": "POD",
+                    "ranges": [ {
+                        "address": "${NSX_NAMESPACE_NETWORK}",
+                        "count": 4096
+                    } ]
+                },                 
+                {
+                    "assignee": "SERVICE",
+                    "ranges": [ {
+                        "address": "10.96.0.0",
+                        "count": 512
+                    } ]
+                } ]
+            },
+            "network": "wkld0",
+            "services": {
+                "dns": {
+                    "search_domains": [ "env1.lab.test" ],
+                    "servers": [ "192.168.100.1" ]
+                },
+                "ntp": {
+                    "servers": [ "time1.vmware.com" ]
+                }
+            },
+            "network_type": "NSXT",
+            "nsx": {
+                "dvs": "${NSX_DVS}",
+                "namespace_subnet_prefix": 28
+            }
+        },
+        "storage": {
+            "ephemeral_storage_policy": "${TKGStoragePolicy}",
+            "image_storage_policy": "${TKGStoragePolicy}"
+        }
+    },
+    "zones": [ "${TKGZone1}","${TKGZone2}","${TKGZone3}" ]
+}
