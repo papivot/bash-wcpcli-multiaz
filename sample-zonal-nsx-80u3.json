@@ -1,6 +1,6 @@
 {
     "control_plane": {
-        "login_banner": "You are connect to a multi-az Supervisor",
+        "login_banner": "You are connected to a multi-az Supervisor",
         "network": {
             "backing": {
                 "backing": "NETWORK_SEGMENT",
@@ -10,11 +10,11 @@
             },
             "ip_management": {
                 "dhcp_enabled": false,
-                "gateway_address": "192.168.100.1/23",
+                "gateway_address": "${MGMT_GATEWAY_CIDR}",
                 "ip_assignments": [ {
                     "assignee": "NODE",
                     "ranges": [ {
-                        "address": "192.168.100.60",
+                        "address": "${MGMT_STARTING_IP}",
                         "count": 5
                     } ]
                 } ]
@@ -25,11 +25,11 @@
             },
             "services": {
                 "dns": {
-                    "search_domains": [ "env1.lab.test" ],
-                    "servers": [ "192.168.100.1" ]
+                    "search_domains": [ "${DNS_SEARCHDOMAIN}" ],
+                    "servers": [ "${DNS_SERVER}" ]
                 },
                 "ntp": {
-                    "servers": [ "time1.vmware.com" ]
+                    "servers": [ "${NTP_SERVER}" ]
                 }
             }
         },
@@ -39,24 +39,24 @@
     "name": "multi-az-supervisor0",
     "workloads": {
         "edge": {
-            "load_balancer_address_ranges": [
-                {
-                    "address": "${NSX_INGRESS_CIDR}",
-                    "count": 16
-                }
-            ],
             "nsx": {
                 "edge_cluster_ID": "${NSX_EDGE_CLUSTER_ID}",
                 "egress_IP_ranges": [
                     {
-                        "address": "${NSX_EGRESS_CIDR}",
-                        "count": 16
+                        "address": "10.70.0.32",
+                        "count": 28
                     }
                 ],
                 "load_balancer_size": "SMALL",
                 "routing_mode": "NAT",
                 "t0_gateway": "${NSX_T0_GATEWAY}"
             },
+            "load_balancer_address_ranges": [
+                {
+                    "address": "10.80.0.32",
+                    "count": 28
+                }
+            ],
             "provider": "NSX"
         },
         "images": {
@@ -65,14 +65,14 @@
         "network": {
             "ip_management": {
                 "dhcp_enabled": false,
-                "gateway_address": "192.168.102.1/23",
+                "gateway_address": "10.0.0.221/24",
                 "ip_assignments": [ {
                     "assignee": "POD",
                     "ranges": [ {
-                        "address": "${NSX_NAMESPACE_NETWORK}",
+                        "address": "10.244.0.0",
                         "count": 4096
                     } ]
-                },                 
+                },
                 {
                     "assignee": "SERVICE",
                     "ranges": [ {
@@ -84,11 +84,11 @@
             "network": "wkld0",
             "services": {
                 "dns": {
-                    "search_domains": [ "env1.lab.test" ],
-                    "servers": [ "192.168.100.1" ]
+                    "search_domains": [ "${DNS_SEARCHDOMAIN}" ],
+                    "servers": [ "${DNS_SERVER}" ]
                 },
                 "ntp": {
-                    "servers": [ "time1.vmware.com" ]
+                    "servers": [ "${NTP_SERVER}" ]
                 }
             },
             "network_type": "NSXT",

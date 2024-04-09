@@ -1,6 +1,6 @@
 {
     "control_plane": {
-        "login_banner": "You are connect to a multi-az Supervisor",
+        "login_banner": "You are connected to a multi-az Supervisor",
         "network": {
             "backing": {
                 "backing": "NETWORK_SEGMENT",
@@ -10,11 +10,11 @@
             },
             "ip_management": {
                 "dhcp_enabled": false,
-                "gateway_address": "192.168.100.1/23",
+                "gateway_address": "${MGMT_GATEWAY_CIDR}",
                 "ip_assignments": [ {
                     "assignee": "NODE",
                     "ranges": [ {
-                        "address": "192.168.100.60",
+                        "address": "${MGMT_STARTING_IP}",
                         "count": 5
                     } ]
                 } ]
@@ -25,11 +25,11 @@
             },
             "services": {
                 "dns": {
-                    "search_domains": [ "env1.lab.test" ],
-                    "servers": [ "192.168.100.1" ]
+                    "search_domains": [ "${DNS_SEARCHDOMAIN}" ],
+                    "servers": [ "${DNS_SERVER}" ]
                 },
                 "ntp": {
-                    "servers": [ "time1.vmware.com" ]
+                    "servers": [ "${NTP_SERVER}" ]
                 }
             }
         },
@@ -76,11 +76,11 @@
             "network": "wkld0",
             "services": {
                 "dns": {
-                    "search_domains": [ "env1.lab.test" ],
-                    "servers": [ "192.168.100.1" ]
+                    "search_domains": [ "${DNS_SEARCHDOMAIN}" ],
+                    "servers": [ "${DNS_SERVER}" ]
                 },
                 "ntp": {
-                    "servers": [ "time1.vmware.com" ]
+                    "servers": [ "${NTP_SERVER}" ]
                 }
             },
             "network_type": "VSPHERE",
